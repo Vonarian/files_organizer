@@ -6,6 +6,7 @@ import 'package:files_organizer/organizer.dart';
 import 'package:path/path.dart' as p;
 
 import 'constants.dart';
+import 'info.dart';
 
 Future<void> main(List<String> args) async {
   final sw = Stopwatch()..start();
@@ -24,14 +25,20 @@ Future<void> main(List<String> args) async {
     ...Extensions.videos
   ];
   String knownExtensions = '';
-  for (var extension in knownFiles) {
-    knownExtensions += '$extension, ';
+  for (int i = 0; i < knownFiles.length; i++) {
+    final extension = knownFiles[i];
+    if (i != knownFiles.length - 1) {
+      knownExtensions += '$extension, ';
+    } else {
+      knownExtensions += extension;
+    }
   }
-  stdout.write(infoPen(Info.runMessage(knownExtensions)));
   final results = CliHandler.getResults(args, commands, flags);
   if (results['help']) {
     stdout.write(helpPen(Info.help));
+    stdout.write(infoPen(Info.runMessage(knownExtensions)));
     stdout.write(infoPen(Info.developer));
+    stdout.write(successPen('\nExecuted in ${sw.elapsedMilliseconds} ms!'));
     exit(0);
   }
   String directory = results['directory'];
@@ -50,6 +57,7 @@ Future<void> main(List<String> args) async {
         .writeAsString('Error occurred during organization of files:\n$e\n$st');
     stdout.write(infoPen(
         '\nError and stacktrace have been written to ${errorFile.path}'));
+    exit(1);
   }
   stdout.write(successPen('\nExecuted in ${sw.elapsedMilliseconds} ms!'));
   sw.stop();
