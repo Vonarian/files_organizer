@@ -14,7 +14,7 @@ class Organizer {
     final dir = Directory(directory);
     final bool isDirectory = await dir.exists();
     if (!isDirectory) {
-      stdout.write(errorPen(
+      stdout.writeln(errorPen(
           '$directory is not a directory or is not accessible.\nExiting!'));
       exit(1);
     }
@@ -22,55 +22,27 @@ class Organizer {
     if (filesList.isEmpty) {
       throw Exception(errorPen('No files found in the directory.'));
     }
-    final generalDir = Directory('$directory\\${Folders.general}');
-    final videosDir = Directory('$directory\\${Folders.videos}');
-    final musicsDir = Directory('$directory\\${Folders.musics}');
-    final installersDir = Directory('$directory\\${Folders.installers}');
-    final documentsDir = Directory('$directory\\${Folders.documents}');
-    final compressedDir = Directory('$directory\\${Folders.compressed}');
-    final programsDir = Directory('$directory\\${Folders.programs}');
-    final imagesDir = Directory('$directory\\${Folders.images}');
-    if (!await generalDir.exists()) {
-      await generalDir.create(recursive: true);
-    }
-    if (!await videosDir.exists()) {
-      await videosDir.create(recursive: true);
-    }
-    if (!await musicsDir.exists()) {
-      await musicsDir.create(recursive: true);
-    }
-    if (!await installersDir.exists()) {
-      await installersDir.create(recursive: true);
-    }
-    if (!await documentsDir.exists()) {
-      await documentsDir.create(recursive: true);
-    }
-    if (!await compressedDir.exists()) {
-      await compressedDir.create(recursive: true);
-    }
-    if (!await programsDir.exists()) {
-      await programsDir.create(recursive: true);
-    }
-    if (!await imagesDir.exists()) {
-      await imagesDir.create(recursive: true);
-    }
+
     return Organizer(directory);
   }
 
   Future<void> organize() async {
     final dir = Directory(directory);
-    final filesList = (await dir.list().toList()).whereType<File>();
+    final filesList = (await dir.list().toList()).whereType<File>().toList()
+      ..removeWhere((element) =>
+          p.basename(element.path) == p.basename(Platform.resolvedExecutable));
+    final foldersList = List<Directory>.generate(Folders.folders.length,
+        (index) => Directory('$directory\\${Folders.folders[index]}'));
+    for (final dir in foldersList) {
+      if (!await dir.exists()) {
+        await dir.create(recursive: true);
+      }
+    }
     for (var file in filesList) {
       final lowerPath = file.path.toLowerCase();
       final name = p.basename(file.path);
       final extension = p.extension(lowerPath).replaceAll('.', '');
-      final bool isGeneral = !Extensions.programs.contains(extension) &&
-          !Extensions.documents.contains(extension) &&
-          !Extensions.installers.contains(extension) &&
-          !Extensions.musics.contains(extension) &&
-          !Extensions.videos.contains(extension) &&
-          !Extensions.compressed.contains(extension) &&
-          !Extensions.images.contains(extension);
+      final bool isGeneral = !Extensions.extensions.contains(extension);
       if (Extensions.programs.contains(extension)) {
         final copyPath = '$directory\\${Folders.programs}\\$name';
         await file.copy(copyPath);
@@ -121,15 +93,22 @@ class Organizer {
         }
       }
       if (isGeneral) {
-        {
-          final copyPath = '$directory\\${Folders.general}\\$name';
-          await file.copy(copyPath);
-          if (await File(copyPath).exists()) {
-            await file.delete();
-          }
+        final copyPath = '$directory\\${Folders.general}\\$name';
+        await file.copy(copyPath);
+        if (await File(copyPath).exists()) {
+          await file.delete();
         }
       }
     }
-    stdout.write(successPen('${filesList.length} files have been organized!'));
+    for (final folder in foldersList) {
+      final folderContent = await folder.list().toList();
+      if (folderContent.isEmpty) {
+        stdout.writeln(infoPen(
+            'Folder "${p.basename(folder.path)}" is empty, deleting...'));
+        await folder.delete();
+      }
+    }
+    stdout
+        .writeln(successPen('${filesList.length} files have been organized!'));
   }
 }

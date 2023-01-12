@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ansicolor/ansicolor.dart';
 import 'package:args/args.dart';
 
@@ -23,6 +25,33 @@ class CliHandler {
     }
     final results = parser.parse(args);
     return results;
+  }
+}
+
+class InputHandler {
+  static String? getInput() {
+    String? input = stdin.readLineSync();
+    return input;
+  }
+
+  static Future<String?> validateInput(String? input) async {
+    bool isDir = input != null ? await Directory(input).exists() : false;
+    if (isDir) {
+      return input;
+    }
+    while (!isDir) {
+      input = getInput();
+      isDir = input != null ? await Directory(input).exists() : false;
+    }
+    if (isDir) return input;
+    return null;
+  }
+
+  static Future<String?> getValidateInput() async {
+    String? input = getInput();
+    input = await validateInput(input);
+    stdout.writeln(errorPen('Received input is null/not a directory.'));
+    return input;
   }
 }
 

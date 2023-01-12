@@ -8,7 +8,7 @@ If the directory contains spaces, make sure you put " before and after passed di
 .\\files_organizer.exe -d "C:\\Folder With Space"
 ''';
   static const developer =
-      '\nDeveloped by Vonarian (https://github.com/Vonarian)';
+      'Developed by Vonarian (https://github.com/Vonarian)';
 
   static String runMessage(String knownExtensions) {
     return '''

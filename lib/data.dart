@@ -75,7 +75,18 @@ class Extensions {
     'gif',
     'tiff',
     'raw',
+    'png',
   ];
+
+  static List<String> get extensions => [
+        ...images,
+        ...compressed,
+        ...documents,
+        ...installers,
+        ...musics,
+        ...programs,
+        ...videos,
+      ];
 }
 
 class Folders {
@@ -87,4 +98,15 @@ class Folders {
   static const documents = 'Documents';
   static const general = 'General';
   static const images = 'Images';
+
+  static List<String> get folders => [
+        programs,
+        installers,
+        compressed,
+        musics,
+        videos,
+        documents,
+        general,
+        images
+      ];
 }
