@@ -40,6 +40,8 @@ class InputHandler {
       return input;
     }
     while (!isDir) {
+      stdout.write(warningPen(
+          'Incorrect input!\nEnter the directory you want to organize: '));
       input = getInput();
       isDir = input != null ? await Directory(input).exists() : false;
     }
