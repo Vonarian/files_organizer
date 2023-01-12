@@ -51,10 +51,11 @@ applications which run on many other platforms.
 
 ### **Planned Work**:
 
-*    [ ]  Add the ability to add a list of default directories to the program to organize them at
-     each launch
-*    [ ]  Add a hotkey to organize a list of directories added by the user
-*    [ ]  Add a run-at-startup feature after implementing the above features.
+* [ ]  Add the ability to add a list of default directories to the program to organize them at each
+  launch
+* [ ]  Add a hotkey to organize a list of directories added by the user
+* [ ]  Add a run-at-startup feature after implementing the above features
+* [ ]  Add the ability to add custom categories and extensions.
 
 ### **Contributions**:
 
