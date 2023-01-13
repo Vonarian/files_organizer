@@ -7,6 +7,7 @@ Pass directory using -d <directory path here>. Example:
 If the directory contains spaces, make sure you put " before and after passed directory path. Example:
 .\\files_organizer.exe -d "C:\\Folder With Space"
 ''';
+
   static const developer =
       'Developed by Vonarian (https://github.com/Vonarian)';
 

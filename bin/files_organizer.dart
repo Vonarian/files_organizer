@@ -9,14 +9,17 @@ import 'constants.dart';
 import 'info.dart';
 
 Future<void> main(List<String> args) async {
-  final sw = Stopwatch()..start();
+  final sw = Stopwatch()
+    ..start();
   String? tempInput;
+
   if (args.isEmpty) {
     stdout.writeln(errorPen('No arguments are passed to the application.'));
     stdout.write(warningPen(
         'Enter the directory path you want to organize, use -h flag to check help: '));
     tempInput = await InputHandler.getValidateInput();
   }
+
   final List<String> knownFiles = Extensions.extensions;
   String knownExtensions = '';
   for (int i = 0; i < knownFiles.length; i++) {
@@ -27,8 +30,10 @@ Future<void> main(List<String> args) async {
       knownExtensions += extension;
     }
   }
+
   try {
     final results = CliHandler.getResults(args, commands, flags);
+
     if (results['help']) {
       stdout.writeln(helpPen(Info.help));
       stdout.writeln(infoPen(Info.runMessage(knownExtensions)));
@@ -36,6 +41,7 @@ Future<void> main(List<String> args) async {
       stdout.writeln(successPen('Executed in ${sw.elapsedMilliseconds} ms!'));
       exit(0);
     }
+
     String directory = tempInput ?? results['directory'];
     if (directory.isEmpty) {
       final inputDir = await InputHandler.getValidateInput();
@@ -56,13 +62,14 @@ Future<void> main(List<String> args) async {
     stdout.writeln(warningPen('Error occurred during organization of files:'));
     stdout.writeln(errorPen(e));
     final errorFile =
-        File('${p.dirname(Platform.resolvedExecutable)}\\log.txt');
+    File('${p.dirname(Platform.resolvedExecutable)}\\log.txt');
     await errorFile
         .writeAsString('Error occurred during organization of files:\n$e\n$st');
     stdout.writeln(
         infoPen('Error and stacktrace have been written to ${errorFile.path}'));
     exit(1);
   }
+
   stdout.writeln(successPen('Executed in ${sw.elapsedMilliseconds} ms!'));
   sw.stop();
 }

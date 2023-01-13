@@ -45,6 +45,7 @@ class InputHandler {
       input = getInput();
       isDir = input != null ? await Directory(input).exists() : false;
     }
+
     if (isDir) return input;
     return null;
   }
