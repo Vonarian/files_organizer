@@ -32,14 +32,14 @@ class Organizer {
 
     final filesList = (await dir.list().toList()).whereType<File>().toList()
       ..removeWhere((element) =>
-      p.basename(element.path) == p.basename(Platform.resolvedExecutable));
+          p.basename(element.path) == p.basename(Platform.resolvedExecutable));
 
     final foldersList = List<Directory>.generate(Folders.folders.length,
-            (index) => Directory('$directory\\${Folders.folders[index]}'));
+        (index) => Directory('$directory\\${Folders.folders[index]}'));
 
     for (final dir in foldersList) {
       if (!dir.existsSync()) {
-        dir.create(recursive: true);
+        await dir.create(recursive: true);
       }
     }
 
