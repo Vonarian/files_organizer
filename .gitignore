@@ -7,3 +7,4 @@ out/
 # Config files
 .idea/
 /.puro.json
+/bin/files_organizer.aot
